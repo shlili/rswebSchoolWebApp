@@ -39,18 +39,16 @@ namespace MVCSchoolApp.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
-                    b.Property<int>("FirstTeacherId")
-                        .HasColumnType("int")
-                        .HasColumnOrder(0);
+                    b.Property<int?>("FirstTeacherId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Programme")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("SecondTeacherId")
-                        .HasColumnType("int")
-                        .HasColumnOrder(1);
+                    b.Property<int?>("SecondTeacherId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("Semester")
                         .HasColumnType("int");
@@ -96,12 +94,10 @@ namespace MVCSchoolApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ProjectUrl")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Semester")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
@@ -109,7 +105,6 @@ namespace MVCSchoolApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("SeminalUrl")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
@@ -174,12 +169,10 @@ namespace MVCSchoolApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TeacherId"), 1L, 1);
 
                     b.Property<string>("AcademicRank")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Degree")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -188,7 +181,7 @@ namespace MVCSchoolApp.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("HireDate")
+                    b.Property<DateTime?>("HireDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastName")
@@ -197,7 +190,6 @@ namespace MVCSchoolApp.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("OfficeNumber")
-                        .IsRequired()
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
@@ -210,15 +202,11 @@ namespace MVCSchoolApp.Migrations
                 {
                     b.HasOne("MVCSchoolApp.Models.Teacher", "FirstTeacher")
                         .WithMany("CoursesAsFirstTeacher")
-                        .HasForeignKey("FirstTeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FirstTeacherId");
 
                     b.HasOne("MVCSchoolApp.Models.Teacher", "SecondTeacher")
                         .WithMany("CoursesAsSecondTeacher")
-                        .HasForeignKey("SecondTeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SecondTeacherId");
 
                     b.Navigation("FirstTeacher");
 

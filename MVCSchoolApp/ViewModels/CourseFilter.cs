@@ -10,6 +10,6 @@ namespace MVCSchoolApp.ViewModels
         public SelectList filtered { get; set; }
         public int CourseSem { get; set; }
         public string CourseProg { get; set; }
-        public string SearchString { get; set; }
+        public string CTitle { get; set; }
     }
 }

@@ -18,17 +18,17 @@ namespace MVCSchoolApp.Models
         public Student Student { get; set; }
 
         [StringLength(10)]
-        public string Semester { get; set; }
+        public string? Semester { get; set; }
 
         public int Year { get; set; }
 
         public int Grade { get; set; }
 
         [StringLength(255)]
-        public string SeminalUrl { get; set; }
+        public string? SeminalUrl { get; set; }
 
         [StringLength(255)]
-        public string ProjectUrl { get; set; }
+        public string? ProjectUrl { get; set; }
 
         public int ExamPoints { get; set; }
 

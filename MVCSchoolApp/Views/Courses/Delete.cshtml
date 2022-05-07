@@ -45,13 +45,30 @@
             @Html.DisplayNameFor(model => model.FirstTeacher)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstTeacher.FirstName)
+            @if (Model.FirstTeacherId != null)
+            {
+                <a asp-controller="Teachers" asp-action="Details" asp-route-id="@Model.FirstTeacherId">@Html.DisplayFor(model => model.FirstTeacher.FullName)</a>
+            }
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.SecondTeacher)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SecondTeacher.FirstName)
+            @if (Model.SecondTeacherId != null)
+            {
+                <a asp-controller="Teachers" asp-action="Details" asp-route-id="@Model.SecondTeacherId">@Html.DisplayFor(model => model.SecondTeacher.FullName)</a>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Students)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var student in Model.Students)
+            {
+                <a asp-controller="Students" asp-action="Details" asp-route-id="@student.StudentId">
+                    @student.Student.FullName
+                </a> <br />
+            }
         </dd>
     </dl>
     

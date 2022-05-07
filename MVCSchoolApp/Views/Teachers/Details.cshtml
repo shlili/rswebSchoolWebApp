@@ -46,6 +46,28 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.HireDate)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CoursesAsFirstTeacher)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var course in Model.CoursesAsFirstTeacher)
+            {
+                <a asp-controller="Courses" asp-action="Details" asp-route-id="@course.CourseId">
+                    @course.Title
+                </a> <br />
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CoursesAsSecondTeacher)
+        </dt>
+        <dd class="col-sm-10">
+            @foreach (var course in Model.CoursesAsSecondTeacher)
+            {
+                <a asp-controller="Courses" asp-action="Details" asp-route-id="@course.CourseId">
+                    @course.Title
+                </a> <br />
+            }
+        </dd>
     </dl>
 </div>
 <div>

@@ -16,7 +16,7 @@ namespace MVCSchoolApp.Models
         [Required]
         public int? Credits { get; set; }
 
-        public int Semester { get; set; }
+        public int? Semester { get; set; }
 
         [StringLength(100)]
         public string Programme { get; set; }
@@ -25,17 +25,18 @@ namespace MVCSchoolApp.Models
         [StringLength(25)]
         public string EducationLevel { get; set; }
 
-        [ForeignKey(nameof(FirstTeacher)), Column(Order = 0)]
+        [ForeignKey(nameof(FirstTeacher))]
         public int? FirstTeacherId { get; set; }
 
-        [ForeignKey(nameof(SecondTeacher)), Column(Order = 1)]
+        [Display(Name = "Professor")]
+        public Teacher? FirstTeacher { get; set; }
+
+        [ForeignKey(nameof(SecondTeacher))]
         public int? SecondTeacherId { get; set; }
 
-        [Display(Name = "Professor")]
-        public Teacher FirstTeacher { get; set; }
-
         [Display(Name = "Asisstant")]
-        public Teacher SecondTeacher { get; set; }
+
+        public Teacher? SecondTeacher { get; set; }
 
         public ICollection<Enrollment> Students { get; set; }
     }

@@ -56,7 +56,7 @@ namespace MVCSchoolApp.Controllers
             }
 
             teachers = teachers.Include(c => c.CoursesAsFirstTeacher)
-                               .Include(c => c.CoursesAsFirstTeacher);
+                               .Include(c => c.CoursesAsSecondTeacher);
 
             var teacherfilterVM = new TeacherFilter
             {
@@ -74,7 +74,8 @@ namespace MVCSchoolApp.Controllers
                 return NotFound();
             }
 
-            var teacher = await _context.Teacher
+            var teacher = await _context.Teacher.Include(c => c.CoursesAsFirstTeacher)
+                .Include(c => c.CoursesAsSecondTeacher)
                 .FirstOrDefaultAsync(m => m.TeacherId == id);
             if (teacher == null)
             {

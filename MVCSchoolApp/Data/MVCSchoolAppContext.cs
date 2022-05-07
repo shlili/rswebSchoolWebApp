@@ -34,6 +34,16 @@ namespace MVCSchoolApp.Data
             .WithMany(p => p.Students)
             .HasForeignKey(p => p.CourseId);
             //.HasPrincipalKey(p => p.Id);
+            builder.Entity<Course>()
+                .HasOne<Teacher>(p => p.FirstTeacher)
+                .WithMany(p => p.CoursesAsFirstTeacher)
+                .HasForeignKey(p => p.FirstTeacherId);
+
+            builder.Entity<Course>()
+                .HasOne<Teacher>(p => p.SecondTeacher)
+                .WithMany(p => p.CoursesAsSecondTeacher)
+                .HasForeignKey(p => p.SecondTeacherId);
+
         }
     }
 }
