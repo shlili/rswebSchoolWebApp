@@ -218,6 +218,31 @@ namespace MVCSchoolApp.Controllers
         {
             return _context.Course.Any(e => e.CourseId == id);
         }
+
+        public async Task<IActionResult> TeachingCourse(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var teacher = await _context.Teacher
+                .FirstOrDefaultAsync(m => m.TeacherId == id);
+
+            IQueryable<Course> coursesQuery = _context.Course.Where(m => m.FirstTeacherId == id || m.SecondTeacherId == id);
+            await _context.SaveChangesAsync();
+            if (teacher == null)
+            {
+                return NotFound();
+            }
+            ViewBag.Message = teacher.FirstName;
+            var courseVM = new CourseViewModel
+            {
+                Courses = await coursesQuery.ToListAsync(),
+            };
+
+            return View(courseVM);
+        }
     }
 }
 

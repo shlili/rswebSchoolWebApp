@@ -35,6 +35,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnNlc1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Lili/source/repos/MVCSchoolApp/MVCSchoolApp/Views/Courses/TeachingCourse.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnNlc1xUZWFjaGluZ0NvdXJzZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Lili/source/repos/MVCSchoolApp/MVCSchoolApp/Views/Enrollments/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW5yb2xsbWVudHNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -53,6 +57,22 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Lili/source/repos/MVCSchoolApp/MVCSchoolApp/Views/Enrollments/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW5yb2xsbWVudHNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lili/source/repos/MVCSchoolApp/MVCSchoolApp/Views/Enrollments/StudentEdit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW5yb2xsbWVudHNcU3R1ZGVudEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lili/source/repos/MVCSchoolApp/MVCSchoolApp/Views/Enrollments/StudentFunctions.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW5yb2xsbWVudHNcU3R1ZGVudEZ1bmN0aW9ucy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lili/source/repos/MVCSchoolApp/MVCSchoolApp/Views/Enrollments/TeacherEdit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW5yb2xsbWVudHNcVGVhY2hlckVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lili/source/repos/MVCSchoolApp/MVCSchoolApp/Views/Enrollments/TeacherFunctions.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW5yb2xsbWVudHNcVGVhY2hlckZ1bmN0aW9ucy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Lili/source/repos/MVCSchoolApp/MVCSchoolApp/Views/Home/Index.cshtml]
@@ -85,6 +105,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Lili/source/repos/MVCSchoolApp/MVCSchoolApp/Views/Students/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Lili/source/repos/MVCSchoolApp/MVCSchoolApp/Views/Students/EnrolledStudents.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcRW5yb2xsZWRTdHVkZW50cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Lili/source/repos/MVCSchoolApp/MVCSchoolApp/Views/Students/Index.cshtml]
