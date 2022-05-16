@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace MVCSchoolApp.Controllers
         }
 
         // GET: Courses
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(string CourseProg, string CTitle, int CourseSem)
         {
             IQueryable<Course> courses = _context.Course.AsQueryable();
@@ -60,6 +62,7 @@ namespace MVCSchoolApp.Controllers
         }
 
         // GET: Courses/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -81,10 +84,11 @@ namespace MVCSchoolApp.Controllers
         }
 
         // GET: Courses/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            ViewData["FirstTeacherId"] = new SelectList(_context.Set<Teacher>(), "TeacherId");
-            ViewData["SecondTeacherId"] = new SelectList(_context.Set<Teacher>(), "TeacherId");
+            ViewData["FirstTeacherId"] = new SelectList(_context.Teacher, "TeacherId", "FullName");
+            ViewData["SecondTeacherId"] = new SelectList(_context.Teacher, "TeacherId", "FullName");
             return View();
         }
 
@@ -93,6 +97,7 @@ namespace MVCSchoolApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("CourseId,Title,Credits,Semester,Programme,EducationLevel,FirstTeacherId,SecondTeacherId")] Course course)
         {
             if (ModelState.IsValid)
@@ -101,12 +106,13 @@ namespace MVCSchoolApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FirstTeacherId"] = new SelectList(_context.Set<Teacher>(), "TeacherId", "FullName", course.FirstTeacherId);
-            ViewData["SecondTeacherId"] = new SelectList(_context.Set<Teacher>(), "TeacherId", "FullName", course.SecondTeacherId);
+            ViewData["FirstTeacherId"] = new SelectList(_context.Teacher, "TeacherId", "FullName", course.FirstTeacherId);
+            ViewData["SecondTeacherId"] = new SelectList(_context.Teacher, "TeacherId", "FullName", course.SecondTeacherId);
             return View(course);
         }
 
         // GET: Courses/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -127,12 +133,12 @@ namespace MVCSchoolApp.Controllers
             {
                 Course = course,
                 StudentsList = new MultiSelectList(students, "StudentId", "FullName"),
-                Students = course.Students.Select(sa => sa.StudentId),
+                SelStudents = course.Students.Select(sa => sa.StudentId),
             };
 
-            ViewData["FirstTeacherId"] = new SelectList(_context.Set<Teacher>(), "TeacherId", "FullName", course.FirstTeacherId);
-            ViewData["SecondTeacherId"] = new SelectList(_context.Set<Teacher>(), "TeacherId", "FullName", course.SecondTeacherId);
-            return View(course);
+            ViewData["FirstTeacherId"] = new SelectList(_context.Teacher, "TeacherId", "FullName", course.FirstTeacherId);
+            ViewData["SecondTeacherId"] = new SelectList(_context.Teacher, "TeacherId", "FullName", course.SecondTeacherId);
+            return View(viewmodel);
         }
 
         // POST: Courses/Edit/5
@@ -140,6 +146,8 @@ namespace MVCSchoolApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Edit(int id, CourseStudents viewmodel)
         {
             if (id != viewmodel.Course.CourseId)
@@ -154,7 +162,7 @@ namespace MVCSchoolApp.Controllers
                     _context.Update(viewmodel.Course);
                     await _context.SaveChangesAsync();
 
-                    IEnumerable<long> listStudents = viewmodel.Students;
+                    IEnumerable<long> listStudents = viewmodel.SelStudents;
                     IQueryable<Enrollment> toBeRemoved = _context.Enrollment.Where(c => !listStudents.Contains(c.StudentId) && c.CourseId == id);
                     _context.Enrollment.RemoveRange(toBeRemoved);
 
@@ -178,12 +186,14 @@ namespace MVCSchoolApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["FirstTeacherId"] = new SelectList(_context.Set<Teacher>(), "TeacherId", "FullName", viewmodel.Course.FirstTeacherId);
-            ViewData["SecondTeacherId"] = new SelectList(_context.Set<Teacher>(), "TeacherId", "FullName", viewmodel.Course.SecondTeacherId);
-            return View(viewmodel.Course);
+            ViewData["FirstTeacherId"] = new SelectList(_context.Teacher, "TeacherId", "FullName", viewmodel.Course.FirstTeacherId);
+            ViewData["SecondTeacherId"] = new SelectList(_context.Teacher, "TeacherId", "FullName", viewmodel.Course.SecondTeacherId);
+            return View(viewmodel);
         }
 
         // GET: Courses/Delete/5
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -206,6 +216,8 @@ namespace MVCSchoolApp.Controllers
         // POST: Courses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var course = await _context.Course.FindAsync(id);
@@ -218,6 +230,7 @@ namespace MVCSchoolApp.Controllers
         {
             return _context.Course.Any(e => e.CourseId == id);
         }
+        [Authorize(Roles = "Admin,Teacher")]
 
         public async Task<IActionResult> TeachingCourse(int? id)
         {

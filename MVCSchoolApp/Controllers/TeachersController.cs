@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace MVCSchoolApp.Controllers
         }
 
         // GET: Teachers
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(string TeacherFName, string TeacherLName, string TeacherAcRank, string TeacherEdLevel)
         {
             IQueryable<Teacher> teachers = _context.Teacher.AsQueryable();
@@ -67,6 +69,7 @@ namespace MVCSchoolApp.Controllers
         }
 
         // GET: Teachers/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -82,10 +85,17 @@ namespace MVCSchoolApp.Controllers
                 return NotFound();
             }
 
-            return View(teacher);
+            TeacherImageVM viewmodel = new TeacherImageVM
+            {
+                teacher = teacher,
+                ProfileImageName = teacher.ProfilePicture
+            };
+
+            return View(viewmodel);
         }
 
         // GET: Teachers/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -96,6 +106,7 @@ namespace MVCSchoolApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("TeacherId,FirstName,LastName,Degree,AcademicRank,OfficeNumber,HireDate")] Teacher teacher)
         {
             if (ModelState.IsValid)
@@ -108,6 +119,7 @@ namespace MVCSchoolApp.Controllers
         }
 
         // GET: Teachers/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -128,6 +140,7 @@ namespace MVCSchoolApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("TeacherId,FirstName,LastName,Degree,AcademicRank,OfficeNumber,HireDate")] Teacher teacher)
         {
             if (id != teacher.TeacherId)
@@ -159,6 +172,7 @@ namespace MVCSchoolApp.Controllers
         }
 
         // GET: Teachers/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -179,6 +193,7 @@ namespace MVCSchoolApp.Controllers
         // POST: Teachers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var teacher = await _context.Teacher.FindAsync(id);
@@ -190,6 +205,93 @@ namespace MVCSchoolApp.Controllers
         private bool TeacherExists(int id)
         {
             return _context.Teacher.Any(e => e.TeacherId == id);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> EditPicture(long? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var teacher = _context.Teacher.Where(x => x.TeacherId == id).First();
+            if (teacher == null)
+            {
+                return NotFound();
+            }
+
+            TeacherImageVM viewmodel = new TeacherImageVM
+            {
+                teacher = teacher,
+                ProfileImageName = teacher.ProfilePicture
+            };
+
+            return View(viewmodel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> EditPicture(long id, TeacherImageVM viewmodel)
+        {
+            if (id != viewmodel.teacher.TeacherId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    if (viewmodel.ProfileImage != null)
+                    {
+                        string uniqueFileName = UploadedFile(viewmodel);
+                        viewmodel.teacher.ProfilePicture = uniqueFileName;
+                    }
+                    else
+                    {
+                        viewmodel.teacher.ProfilePicture = viewmodel.ProfileImageName;
+                    }
+
+                    _context.Update(viewmodel.teacher);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!TeacherExists(viewmodel.teacher.TeacherId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Details", new { id = viewmodel.teacher.TeacherId });
+            }
+            return View(viewmodel);
+        }
+
+        private string UploadedFile(TeacherImageVM model)
+        {
+            string uniqueFileName = null;
+
+            if (model.ProfileImage != null)
+            {
+                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(model.ProfileImage.FileName);
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.ProfileImage.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
         }
     }
 }

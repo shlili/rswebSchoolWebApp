@@ -9,6 +9,6 @@ namespace MVCSchoolApp.ViewModels
 
         [Display(Name = "Seminal Project File")]
         public IFormFile? SeminalUrlFile { get; set; }
-        public string SeminalUrlName { get; set; }
+        public string? SeminalUrlName { get; set; }
     }
 }

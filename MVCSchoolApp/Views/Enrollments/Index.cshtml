@@ -6,9 +6,12 @@
 
 <h1>Index</h1>
 
+@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
 <p>
-    <a asp-action="Create">Create New</a>
+<a asp-action="Create">Create New</a>
 </p>
+}
 <table class="table">
     <thead>
         <tr>
@@ -91,9 +94,11 @@
                 @Html.DisplayFor(modelItem => item.FinishDate)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.EnrollmentId">Edit</a> |
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                { <a asp-action="Edit" asp-route-id="@item.EnrollmentId">Edit</a> } |
                 <a asp-action="Details" asp-route-id="@item.EnrollmentId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.EnrollmentId">Delete</a>
+                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                { <a asp-action="Delete" asp-route-id="@item.EnrollmentId">Delete</a> }
             </td>
         </tr>
 }

@@ -10,17 +10,17 @@ namespace MVCSchoolApp.Models
         [Required]
         public int CourseId { get; set; }
 
-        public Course Course { get; set; }
+        public Course? Course { get; set; }
 
         [Required]
         public long StudentId { get; set; }
 
-        public Student Student { get; set; }
+        public Student? Student { get; set; }
 
         [StringLength(10)]
         public string? Semester { get; set; }
 
-        public int Year { get; set; }
+        public int? Year { get; set; }
 
         public int Grade { get; set; }
 

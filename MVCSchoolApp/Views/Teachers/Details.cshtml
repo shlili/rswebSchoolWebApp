@@ -1,4 +1,4 @@
-﻿@model MVCSchoolApp.Models.Teacher
+﻿@model MVCSchoolApp.ViewModels.TeacherImageVM
 
 @{
     ViewData["Title"] = "Details";
@@ -11,46 +11,55 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.FirstName)
+           Profile picture:
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.FirstName)
+            <img src="~/images/@Model.teacher.ProfilePicture"
+                class="rounded-circle"
+                height="40" width="40"
+                asp-append-version="true" />
+        </dd> 
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.teacher.FirstName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.teacher.FirstName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LastName)
+            @Html.DisplayNameFor(model => model.teacher.LastName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LastName)
+            @Html.DisplayFor(model => model.teacher.LastName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Degree)
+            @Html.DisplayNameFor(model => model.teacher.Degree)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Degree)
+            @Html.DisplayFor(model => model.teacher.Degree)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.AcademicRank)
+            @Html.DisplayNameFor(model => model.teacher.AcademicRank)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.AcademicRank)
+            @Html.DisplayFor(model => model.teacher.AcademicRank)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OfficeNumber)
+            @Html.DisplayNameFor(model => model.teacher.OfficeNumber)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OfficeNumber)
+            @Html.DisplayFor(model => model.teacher.OfficeNumber)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HireDate)
+            @Html.DisplayNameFor(model => model.teacher.HireDate)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HireDate)
+            @Html.DisplayFor(model => model.teacher.HireDate)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CoursesAsFirstTeacher)
+            @Html.DisplayNameFor(model => model.teacher.CoursesAsFirstTeacher)
         </dt>
         <dd class="col-sm-10">
-            @foreach (var course in Model.CoursesAsFirstTeacher)
+            @foreach (var course in Model.teacher.CoursesAsFirstTeacher)
             {
                 <a asp-controller="Courses" asp-action="Details" asp-route-id="@course.CourseId">
                     @course.Title
@@ -58,10 +67,10 @@
             }
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CoursesAsSecondTeacher)
+            @Html.DisplayNameFor(model => model.teacher.CoursesAsSecondTeacher)
         </dt>
         <dd class="col-sm-10">
-            @foreach (var course in Model.CoursesAsSecondTeacher)
+            @foreach (var course in Model.teacher.CoursesAsSecondTeacher)
             {
                 <a asp-controller="Courses" asp-action="Details" asp-route-id="@course.CourseId">
                     @course.Title
@@ -71,6 +80,11 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.TeacherId">Edit</a> |
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <a asp-action="EditPicture" asp-route-id="@Model?.teacher.TeacherId">Edit picture</a>
+    }
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    { <a asp-action="Edit" asp-route-id="@Model.teacher.TeacherId">Edit</a> } |
     <a asp-action="Index">Back to List</a>
 </div>

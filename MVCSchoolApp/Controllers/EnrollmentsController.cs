@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace MVCSchoolApp.Controllers
         }
 
         // GET: Enrollments
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             var mVCSchoolAppContext = _context.Enrollment.Include(e => e.Course).Include(e => e.Student);
@@ -29,6 +31,7 @@ namespace MVCSchoolApp.Controllers
         }
 
         // GET: Enrollments/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null)
@@ -49,6 +52,7 @@ namespace MVCSchoolApp.Controllers
         }
 
         // GET: Enrollments/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             ViewData["CourseId"] = new SelectList(_context.Course, "CourseId", "Title");
@@ -61,6 +65,7 @@ namespace MVCSchoolApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("EnrollmentId,CourseId,StudentId,Semester,Year,Grade,SeminalUrl,ProjectUrl,ExamPoints,SeminalPoints,ProjectPoints,AdditionalPoints,FinishDate")] Enrollment enrollment)
         {
             if (ModelState.IsValid)
@@ -75,6 +80,7 @@ namespace MVCSchoolApp.Controllers
         }
 
         // GET: Enrollments/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -97,6 +103,7 @@ namespace MVCSchoolApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(long id, [Bind("EnrollmentId,CourseId,StudentId,Semester,Year,Grade,SeminalUrl,ProjectUrl,ExamPoints,SeminalPoints,ProjectPoints,AdditionalPoints,FinishDate")] Enrollment enrollment)
         {
             if (id != enrollment.EnrollmentId)
@@ -130,6 +137,7 @@ namespace MVCSchoolApp.Controllers
         }
 
         // GET: Enrollments/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -152,6 +160,7 @@ namespace MVCSchoolApp.Controllers
         // POST: Enrollments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var enrollment = await _context.Enrollment.FindAsync(id);
@@ -165,6 +174,7 @@ namespace MVCSchoolApp.Controllers
             return _context.Enrollment.Any(e => e.EnrollmentId == id);
         }
 
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> TeacherFunctions(int id, string teacher, int year)
         {
             if (id == null)
@@ -181,7 +191,7 @@ namespace MVCSchoolApp.Controllers
                 .Include(e => e.Course)
                 .Include(e => e.Student);
             await _context.SaveChangesAsync();
-            IQueryable<int> yearsQuery = _context.Enrollment.OrderBy(m => m.Year).Select(m => m.Year).Distinct();
+            IQueryable<int?> yearsQuery = _context.Enrollment.OrderBy(m => m.Year).Select(m => m.Year).Distinct();
             IQueryable<Enrollment> enrollmentQuery = enrollment.AsQueryable();
             if (year != null && year != 0)
             {
@@ -197,8 +207,12 @@ namespace MVCSchoolApp.Controllers
                 return NotFound();
             }
 
+            var Enrollments = await enrollmentQuery.ToListAsync();
+            var ocnds = new SelectList(await yearsQuery.ToListAsync());
+
             TeacherStudent viewmodel = new TeacherStudent
             {
+               
                 Enrolls = await enrollmentQuery.ToListAsync(),
                 YearList = new SelectList(await yearsQuery.ToListAsync())
             };
@@ -206,6 +220,7 @@ namespace MVCSchoolApp.Controllers
             return View(viewmodel);
         }
 
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> TeacherEdit(long? id, string teacher)
         {
             if (id == null)
@@ -227,6 +242,7 @@ namespace MVCSchoolApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Teacher")]
         public async Task<IActionResult> TeacherEdit(int id, string teacher, [Bind("EnrollmentId,CourseId,StudentId,Semester,Year,Grade,SeminalUrl,ProjectUrl,ExamPoint,SeminalPoints,ProjectPoints,AdditionalPoints,FinishDate")] Enrollment enrollment)
         {
             if (id != enrollment.EnrollmentId)
@@ -259,6 +275,7 @@ namespace MVCSchoolApp.Controllers
             return View(enrollment);
         }
 
+        [Authorize(Roles = "Admin,Student")]
         public async Task<IActionResult> StudentFunctions(int? id)
         {
             if (id == null)
@@ -284,6 +301,7 @@ namespace MVCSchoolApp.Controllers
             return View(await enrollment.ToListAsync());
         }
 
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> StudentEdit(int? id)
         {
             if (id == null)
@@ -311,6 +329,7 @@ namespace MVCSchoolApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Student")]
         public async Task<IActionResult> StudentEdit(long id, StudentViewModel viewmodel)
         {
             if (id != viewmodel.Enrollment.EnrollmentId)

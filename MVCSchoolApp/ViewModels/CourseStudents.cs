@@ -9,9 +9,9 @@ namespace MVCSchoolApp.ViewModels
 {
     public class CourseStudents
     {
-        public Course Course { get; set; }
-        public IEnumerable<long> Students { get; set; }
-        public IEnumerable<SelectListItem> StudentsList { get; set; }
-        public string ProjectUrl { get; set; }
+        public Course? Course { get; set; }
+        public IEnumerable<long>? SelStudents { get; set; }
+        public IEnumerable<SelectListItem>? StudentsList { get; set; }
+        public string? ProjectUrl { get; set; }
     }
 }

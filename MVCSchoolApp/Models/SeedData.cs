@@ -5,17 +5,67 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using MVCSchoolApp.Areas.Identity.Data;
 
 namespace MVCSchoolApp.Models
 {
     public class SeedData
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static async Task CreateUserRoles(IServiceProvider serviceProvider)
+        {
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<MVCSchoolAppUser>>();
+            IdentityResult roleResult;
+            //Add Admin Role
+            var roleCheck = await RoleManager.RoleExistsAsync("Admin");
+            if (!roleCheck) { roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin")); }
+            MVCSchoolAppUser user = await UserManager.FindByEmailAsync("admin@schoolapp.com");
+            if (user == null)
+            {
+                var User = new MVCSchoolAppUser();
+                User.Email = "admin@schoolapp.com";
+                User.UserName = "admin@schoolapp.com";
+                string userPWD = "Admin123";
+                IdentityResult chkUser = await UserManager.CreateAsync(User, userPWD);
+                //Add default User to Role Admin
+                if (chkUser.Succeeded) { var result1 = await UserManager.AddToRoleAsync(User, "Admin"); }
+            }
+
+            var roleCheck1 = await RoleManager.RoleExistsAsync("Teacher");
+            if (!roleCheck1) { roleResult = await RoleManager.CreateAsync(new IdentityRole("Teacher")); }
+            MVCSchoolAppUser user1 = await UserManager.FindByEmailAsync("teacher@schoolapp.com");
+            if (user1 == null)
+            {
+                var User = new MVCSchoolAppUser();
+                User.Email = "teacher@schoolapp.com";
+                User.UserName = "teacher@schoolapp.com";
+                string userPWD = "Teacher123";
+                IdentityResult chkUser = await UserManager.CreateAsync(User, userPWD);
+                //Add default User to Role Admin
+                if (chkUser.Succeeded) { var result1 = await UserManager.AddToRoleAsync(User, "Teacher"); }
+            }
+            var roleCheck2 = await RoleManager.RoleExistsAsync("Student");
+            if (!roleCheck2) { roleResult = await RoleManager.CreateAsync(new IdentityRole("Student")); }
+            MVCSchoolAppUser user2 = await UserManager.FindByEmailAsync("student@schoolapp.com");
+            if (user2 == null)
+            {
+                var User = new MVCSchoolAppUser();
+                User.Email = "student@schoolapp.com";
+                User.UserName = "student@schoolapp.com";
+                string userPWD = "Student123";
+                IdentityResult chkUser = await UserManager.CreateAsync(User, userPWD);
+                //Add default User to Role Admin
+                if (chkUser.Succeeded) { var result1 = await UserManager.AddToRoleAsync(User, "Student"); }
+            }
+        }
+            public static void Initialize(IServiceProvider serviceProvider)
         {
             using (var context = new MVCSchoolAppContext(
             serviceProvider.GetRequiredService<
             DbContextOptions<MVCSchoolAppContext>>()))
             {
+                CreateUserRoles(serviceProvider).Wait();
                 // Look for any movies.
                 if (!context.Student.Any())
                 {

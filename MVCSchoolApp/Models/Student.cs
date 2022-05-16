@@ -16,7 +16,7 @@ namespace MVCSchoolApp.Models
         [StringLength(50, MinimumLength = 5)]
         [Required]
         public string LastName { get; set; }
-
+        [Display(Name = "Full Name")]
         public string FullName
         {
             get { return string.Format("{0} {1}", FirstName, LastName); }
@@ -36,6 +36,8 @@ namespace MVCSchoolApp.Models
         [StringLength(25)]
         public string EducationLevel { get; set; }
 
-        public ICollection<Enrollment> Courses { get; set; }
+        public string? ProfilePicture { get; set; }
+
+        public ICollection<Enrollment>? Courses { get; set; }
     }
 }
