@@ -30,11 +30,10 @@ namespace MVCSchoolApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        //nz dali treba
-        [Authorize(Roles = "Admin")]
-        public IActionResult CreateUser()
-        {
-            return View();
-        }
+        //[Authorize(Roles = "Admin")]
+        //public IActionResult CreateUser()
+        //{
+        //    return View();
+        //}
     }
 }

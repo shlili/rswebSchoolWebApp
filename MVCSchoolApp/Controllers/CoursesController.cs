@@ -23,7 +23,7 @@ namespace MVCSchoolApp.Controllers
         }
 
         // GET: Courses
-        [Authorize(Roles = "Admin")]
+        
         public async Task<IActionResult> Index(string CourseProg, string CTitle, int CourseSem)
         {
             IQueryable<Course> courses = _context.Course.AsQueryable();

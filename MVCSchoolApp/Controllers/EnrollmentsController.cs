@@ -23,7 +23,7 @@ namespace MVCSchoolApp.Controllers
         }
 
         // GET: Enrollments
-        [Authorize(Roles = "Admin")]
+        
         public async Task<IActionResult> Index()
         {
             var mVCSchoolAppContext = _context.Enrollment.Include(e => e.Course).Include(e => e.Student);
@@ -174,7 +174,7 @@ namespace MVCSchoolApp.Controllers
             return _context.Enrollment.Any(e => e.EnrollmentId == id);
         }
 
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> TeacherFunctions(int id, string teacher, int year)
         {
             if (id == null)
@@ -220,7 +220,7 @@ namespace MVCSchoolApp.Controllers
             return View(viewmodel);
         }
 
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> TeacherEdit(long? id, string teacher)
         {
             if (id == null)
@@ -242,7 +242,7 @@ namespace MVCSchoolApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Teacher")]
+        [Authorize(Roles = "Admin,Teacher")]
         public async Task<IActionResult> TeacherEdit(int id, string teacher, [Bind("EnrollmentId,CourseId,StudentId,Semester,Year,Grade,SeminalUrl,ProjectUrl,ExamPoint,SeminalPoints,ProjectPoints,AdditionalPoints,FinishDate")] Enrollment enrollment)
         {
             if (id != enrollment.EnrollmentId)
@@ -301,7 +301,7 @@ namespace MVCSchoolApp.Controllers
             return View(await enrollment.ToListAsync());
         }
 
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = "Admin,Student")]
         public async Task<IActionResult> StudentEdit(int? id)
         {
             if (id == null)
@@ -329,7 +329,7 @@ namespace MVCSchoolApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Student")]
+        [Authorize(Roles = "Admin,Student")]
         public async Task<IActionResult> StudentEdit(long id, StudentViewModel viewmodel)
         {
             if (id != viewmodel.Enrollment.EnrollmentId)

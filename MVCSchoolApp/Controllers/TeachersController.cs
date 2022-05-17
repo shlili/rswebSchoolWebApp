@@ -23,7 +23,7 @@ namespace MVCSchoolApp.Controllers
         }
 
         // GET: Teachers
-        [Authorize(Roles = "Admin")]
+        
         public async Task<IActionResult> Index(string TeacherFName, string TeacherLName, string TeacherAcRank, string TeacherEdLevel)
         {
             IQueryable<Teacher> teachers = _context.Teacher.AsQueryable();
