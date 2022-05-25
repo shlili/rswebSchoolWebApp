@@ -273,3 +273,6 @@ C:\Users\Lili\source\repos\MVCSchoolApp\MVCSchoolApp\bin\Debug\net6.0\Microsoft.
 C:\Users\Lili\source\repos\MVCSchoolApp\MVCSchoolApp\bin\Debug\net6.0\Microsoft.Extensions.FileProviders.Embedded.dll
 C:\Users\Lili\source\repos\MVCSchoolApp\MVCSchoolApp\bin\Debug\net6.0\Microsoft.Extensions.Identity.Core.dll
 C:\Users\Lili\source\repos\MVCSchoolApp\MVCSchoolApp\bin\Debug\net6.0\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\Lili\source\repos\MVCSchoolApp\MVCSchoolApp\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\Lili\source\repos\MVCSchoolApp\MVCSchoolApp\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\Lili\source\repos\MVCSchoolApp\MVCSchoolApp\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll

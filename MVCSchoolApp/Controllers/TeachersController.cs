@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using MVCSchoolApp.Areas.Identity.Data;
 using MVCSchoolApp.Data;
 using MVCSchoolApp.Models;
 using MVCSchoolApp.ViewModels;
@@ -16,9 +18,11 @@ namespace MVCSchoolApp.Controllers
     public class TeachersController : Controller
     {
         private readonly MVCSchoolAppContext _context;
+        private UserManager<MVCSchoolAppUser> _userManager;
 
-        public TeachersController(MVCSchoolAppContext context)
+        public TeachersController(MVCSchoolAppContext context, UserManager<MVCSchoolAppUser> userManager)
         {
+            _userManager = userManager;
             _context = context;
         }
 
@@ -292,6 +296,55 @@ namespace MVCSchoolApp.Controllers
                 }
             }
             return uniqueFileName;
+        }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult CreateNewAccount()
+        {
+            var actors = _context.Teacher.AsEnumerable();
+            actors = actors.OrderBy(s => s.FullName);
+            CreateNewAccountVM viewmodel = new CreateNewAccountVM
+            {
+                TeacherList = new MultiSelectList(actors, "TeacherId", "FullName")
+            };
+            return View(viewmodel);
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateNewAccount(CreateNewAccountVM viewmodel)
+        {
+            //var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            //var UserManager = serviceProvider.GetRequiredService<UserManager<MVCSchoolAppUser>>();
+            IdentityResult roleResult;
+            //Add Admin Role
+            var name = "";
+            //if (id == teacher.TeacherId)
+            //{
+            //    name = teacher.FirstName.ToLower() + teacher.LastName.ToLower();
+            //}
+            IList<int> TList = viewmodel.SelectedTeacher.ToList();
+            Teacher teacher = _context.Teacher.Single(x => x.TeacherId == TList[0]);
+            name = teacher.FirstName.ToLower() + teacher.LastName.ToLower();
+            if (ModelState.IsValid)
+            {
+            MVCSchoolAppUser user = await _userManager.FindByEmailAsync(name+"@schoolapp.com");
+            if (user == null)
+            {
+                var User = new MVCSchoolAppUser();
+                User.Email = name.ToString()+"@schoolapp.com";
+                User.UserName = name.ToString() + "@schoolapp.com";
+                string userPWD = name.ToString() + "123";
+                IdentityResult chkUser = await _userManager.CreateAsync(User, userPWD);
+                //Add default User to Role Admin
+                if (chkUser.Succeeded) { var result1 = await _userManager.AddToRoleAsync(User, "Teacher"); }
+            }
+            }
+            
+            return RedirectToAction(nameof(Index));
+
         }
     }
 }

@@ -30,6 +30,12 @@ builder.Services.AddDbContext<MVCSchoolAppContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllersWithViews()
+.AddNewtonsoftJson(x =>
+{
+    x.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+    x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    x.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None;
+})
 .AddRazorPagesOptions(options =>
  {
      options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
@@ -43,7 +49,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 8;
     options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = true;
+    options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
     options.Password.RequiredUniqueChars = 6;
     // Lockout settings
@@ -64,7 +70,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
     options.SlidingExpiration = true;
 });
-
+builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
